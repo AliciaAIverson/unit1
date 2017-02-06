@@ -1,16 +1,23 @@
-//This is Module 2 for Geog575, Spring 2017/////////////////////
+//This is Module 3 for Geog575, Spring 2017/////////////////////
 //Author: Alicia Iverson
 //Date: 1.31.17
-//Purpose 1: Copy boilerplate web directory and rename the copy unit-1. Download the latest version of jQuery, add it to the directory's lib folder, and add a link to it in the index.html file.
-//Purpose 2: Look up the populations of at least four cities using an internet search engine. Add script to your main.js file that uses jQuery to create a table of these cities and their populations.
-//Purpose 3: Download main_with_debug.js... Debug the script and add comments to explain what the script is doing at each step.
+//Purpose 1: Geocode the MegaCities.csvPreview the documentView in a new window file included in the module files. Place a geocoded version of the CSV into the data folder of your unit-1 website directory from Module 2.
+//Purpose 2: Convert your geocoded MegaCities.csv file into a KML file and a GeoJSON file. Include both files in the data folder.
+//Purpose 3: Add a function to your main.js file (called from intialize()) that loads your GeoJSON file into the DOM and prints it to the console. Include a second console.log() statement showing that the data cannot be accessed outside of the callback function. Your result in the browser should look similar to Figure 3.3View in a new window. Comment your work.
+//Purpose 4: Download the debug_ajax.jsView in a new window file included in the module files. Copy and paste its contents into your main.js file after the existing script, then add function calls and debug it to make it work with the rest of your script. You may remove unnecessary components of the script to make it logical. Add comments explaining what the script is doing at each step. 
 
 ////////////////////////////////////////////////////////////////
 
+
 //initialize function called when the script loads
 function initialize(){
-	console.log("intialize");
+	//defining function
 	cities();
+	//defining function--> commented out because using consolidated jQueryAjax function in its place
+	//jsAjax();
+	//jQueryAjax();
+	//defining functions
+	debugAjax();
 };
 
 //function to create a table with cities and their populations
@@ -52,17 +59,18 @@ function cities(){
         //add the row's html string to the table
         $("table").append(rowHtml);
     };
-		console.log("success")
+		
 
-	//here declaring function names
-  addColumns(cityPop);
-  addEvents();
+//here declaring function names
+addColumns(cityPop);
+addEvents();
+//jQueryAjax();
+
 };
 
 //function to add a "cityPop" column to the table and populate it
 //function functionName(variable){
 function addColumns(cityPop){
-console.log(cityPop)
 
   $('tr').each(function(i){
 		//conditional statement
@@ -75,17 +83,16 @@ console.log(cityPop)
 			//conditional statement to assign size to according to population and append in table.
   		if (cityPop[i-1].population < 100000){
   			citySize = 'Small';
-				console.log(citySize);
+				
 
   		} else if (cityPop[i-1].population < 500000){
   			citySize = 'Medium';
-				console.log(citySize);
-
+				
   		} else {
   			citySize = 'Large';
-				console.log(citySize);
+				
   		};
-			//append the city size to the table
+		//append the city size to the table
   		$(this).append('<td>' + citySize + '</td>');
   	};
   });
@@ -94,7 +101,6 @@ console.log(cityPop)
 //function to add a mouseover event to the table
 //mouseover = user moves the mouse over an HTML element and something happens
 function addEvents(){
-//console.log(addEvents)
 
 	$('table').mouseover(function(i){
 
@@ -138,7 +144,6 @@ function addEvents(){
 
 //function to display a message (alert) when user clicks the table
 function clickme(){
-//console.log(clickme)
 
 	//message(alert) that will populate
 	alert('Hey, you clicked me!');
@@ -147,7 +152,33 @@ function clickme(){
 	//add the event listener. See example 3.9 Module 2.3.4.
 	$('table').on('click', clickme);
 
-}
+};
+
+//AJAX main purpose: load data asynchronously with rest of script
+//Called "debugAjax" because debugging script from lab and incorporating it to the above script.
+//Function to load GeoJson table
+function debugAjax(){
+	//check success with console.log statement
+	console.log('debugAjax')
+	$.getJSON("data/MegaCities.geojson", debugCallback);
+};
+
+//Get data and put into callback function
+function debugCallback(data){
+	
+	//check success with console.log statement
+	console.log (data)
+	//create and format as heading level 3 label 
+	var htmlString = "<h3>GeoJSON data:</h3>";
+	//append GeoJson data to the htmlString heading
+	htmlString += JSON.stringify(data);
+	//using mydiv formatting, append the heading and data to the display
+	$("#mydiv").append("<p>" + htmlString + "</p>");
+};
+
+//check failure with console.log statement outside of callback function
+//console.log(data)
+
 
 //call the initialize function when the document has loaded
 $(document).ready(initialize);
